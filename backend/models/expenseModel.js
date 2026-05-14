@@ -15,6 +15,12 @@ const expenseSchema = new Schema(
       type: Number,
       required: true,
     },
+    roundOff: {
+      type: Number,
+    },
+    savings: {
+      type: Number,
+    },
     category: {
       type: String,
       required: true,

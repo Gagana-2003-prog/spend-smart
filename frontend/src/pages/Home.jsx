@@ -25,9 +25,9 @@ const Home = () => {
       <div className="bg-primary-50 pb-4 pt-12 sm:pt-0 gap-y-12 flex flex-col sm:block h-[90vh] sm:h-full">
         <div className="w-full sm:h-[65vh] flex flex-col justify-center items-center order-2 sm:order-1">
           <h2 className="text-4xl md:text-5xl xl:text-7xl">
-            Track your{" "}
+            Grow your{" "}
             <TypeAnimation
-              sequence={["Finances", 1000, "Expenses", 1000, "Incomes", 1000]}
+              sequence={["Savings", 1000, "Micro Savings", 1000, "Goals", 1000]}
               wrapper="span"
               speed={20}
               className="text-primary inline-block"
@@ -38,7 +38,7 @@ const Home = () => {
             Welcome to{" "}
             <span className="text-primary font-calSans">SpendSmart</span>, your
             ultimate solution for managing your personal finances effectively.
-            With SpendSmart, you can easily track your expenses, monitor your
+            With SpendSmart, you can easily Grow your Micro Savings, monitor your
             income, and stay on top of your financial goals.
           </p>
           <Button

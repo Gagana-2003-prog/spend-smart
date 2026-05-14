@@ -36,9 +36,7 @@ const SideBar = () => {
             className={`link ${
               isRouteActive("/dashboard") ? "activeLink" : ""
             }`}
-            onClick={() => {
-              navigate("/dashboard");
-            }}
+            onClick={() => navigate("/dashboard")}
           >
             <Dashboard className="size-[1.5rem]" />
             Dashboard
@@ -47,9 +45,7 @@ const SideBar = () => {
             className={`link ${
               isRouteActive("/dashboard/incomes") ? "activeLink" : ""
             }`}
-            onClick={() => {
-              navigate("/dashboard/incomes");
-            }}
+            onClick={() => navigate("/dashboard/incomes")}
           >
             <Income className="size-[1.5rem]" />
             Incomes
@@ -58,21 +54,27 @@ const SideBar = () => {
             className={`link ${
               isRouteActive("/dashboard/expenses") ? "activeLink" : ""
             }`}
-            onClick={() => {
-              navigate("/dashboard/expenses");
-            }}
+            onClick={() => navigate("/dashboard/expenses")}
           >
             <Expense className="size-[1.5rem]" />
             Expenses
+          </li>
+          {/* ✅ NEW - Micro Savings link */}
+          <li
+            className={`link ${
+              isRouteActive("/dashboard/micro-savings") ? "activeLink" : ""
+            }`}
+            onClick={() => navigate("/dashboard/micro-savings")}
+          >
+            <span className="text-xl">🐷</span>
+            Micro Savings
           </li>
         </div>
         <li
           className={`link mt-auto ${
             isRouteActive("/dashboard/settings") ? "activeLink" : ""
           }`}
-          onClick={() => {
-            navigate("/dashboard/settings");
-          }}
+          onClick={() => navigate("/dashboard/settings")}
         >
           <Settings className="size-[1.5rem]" />
           Settings

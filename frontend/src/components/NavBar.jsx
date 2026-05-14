@@ -14,16 +14,16 @@ const NavBar = () => {
       <div className="flex items-center gap-x-3">
         <img
           src={logo}
-          alt="spend smart logo"
+          alt="Micro Savings logo"
           className="w-[2rem] md:w-[3rem]"
         />
         <h1
           className="text-xl sm:text-2xl md:text-3xl uppercase cursor-pointer"
           onClick={() => navigate("/")}
         >
-          Spend{" "}
+          Micro{" "}
           <span className="text-primary text-base sm:text-xl md:text-2xl">
-            Smart.
+            Savings.
           </span>
         </h1>
       </div>

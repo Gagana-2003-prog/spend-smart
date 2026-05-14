@@ -4,10 +4,14 @@ import { EXPENSES_URL } from "../endpoints";
 export const expenseApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllExpenses: builder.query({
-      query: () => ({
-        url: `${EXPENSES_URL}/all`,
-        method: "GET",
-      }),
+      query: (args) => {
+        const page = args?.page || 1;
+        const pageSize = args?.pageSize || 10;
+        return {
+          url: `${EXPENSES_URL}?page=${page}&pageSize=${pageSize}`,
+          method: "GET",
+        };
+      },
     }),
     addExpense: builder.mutation({
       query: (data) => ({
@@ -35,6 +39,12 @@ export const expenseApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getAllExpensesUnpaginated: builder.query({
+      query: () => ({
+        url: `${EXPENSES_URL}/all`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -44,4 +54,5 @@ export const {
   useAddExpenseMutation,
   useUpdateExpenseMutation,
   useDeleteExpenseMutation,
+  useGetAllExpensesUnpaginatedQuery,
 } = expenseApiSlice;

@@ -14,6 +14,7 @@ import {
   Incomes,
   Expenses,
   Settings,
+  MicroSavings,
 } from "./pages";
 import { PublicRoutes, ProtectedRoutes } from "./components/Guards";
 
@@ -41,6 +42,7 @@ const App = () => {
             <Route path="/dashboard/incomes" element={<Incomes />} />
             <Route path="/dashboard/expenses" element={<Expenses />} />
             <Route path="/dashboard/settings" element={<Settings />} />
+            <Route path="/dashboard/micro-savings" element={<MicroSavings />} />
           </Route>
         </Route>
 

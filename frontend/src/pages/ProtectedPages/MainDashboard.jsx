@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Chart from "../../components/Chart";
 import { useSelector } from "react-redux";
 import moment from "moment";
-import { toast } from "react-toastify";
 import { NumericFormat } from "react-number-format";
 
 import { Income, Expense, Balance } from "../../utils/Icons";
@@ -17,55 +16,33 @@ const DashboardPage = () => {
   const [totalExpense, setTotalExpense] = useState(0);
   const [recentHistory, setRecentHistory] = useState([]);
 
-  const { data: incomeData, refetch: refetchIncomes } = useGetAllIncomesQuery();
-  const { data: expenseData, refetch: refetchExpenses } =
-    useGetAllExpensesQuery();
+  const { data: incomeData } = useGetAllIncomesQuery();
+  const { data: expenseData } = useGetAllExpensesQuery();
 
-  const fetchData = async () => {
-    try {
-      await refetchIncomes();
-      await refetchExpenses();
-      if (incomeData) {
-        setTotalIncome(incomeData?.totalIncome);
-      }
-      if (expenseData) {
-        setTotalExpense(expenseData?.totalExpense);
-      }
-      const totalBalance =
-        (incomeData?.totalIncome || 0) - (expenseData?.totalExpense || 0);
-      setTotalBalance(totalBalance);
+  useEffect(() => {
+    const income = incomeData?.totalIncome || 0;
+    const expense = expenseData?.totalExpenses || 0;
 
-      const recentHistory = [
-        ...(incomeData?.incomes || []).map((transaction) => ({
-          ...transaction,
-          type: "income",
-        })),
-        ...(expenseData?.expenses || []).map((transaction) => ({
-          ...transaction,
-          type: "expense",
-        })),
-      ];
-      recentHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
-      const recentTransactions = recentHistory.slice(0, 3);
+    setTotalIncome(income);
+    setTotalExpense(expense);
+    setTotalBalance(income - expense);
 
-      setRecentHistory(recentTransactions);
-    } catch (error) {
-      console.log(error);
-      toast.error(error?.data?.error || "Unexpected Internal Server Error!");
-    }
-  };
+    const history = [
+      ...(incomeData?.incomes || []).map((t) => ({ ...t, type: "income" })),
+      ...(expenseData?.expenses || []).map((t) => ({ ...t, type: "expense" })),
+    ];
+    history.sort((a, b) => new Date(b.date) - new Date(a.date));
+    setRecentHistory(history.slice(0, 3));
+  }, [incomeData, expenseData]);
 
   const incomeDates =
-    incomeData?.incomes.map((income) =>
-      moment(income.date).format("MM/DD/YYYY")
-    ) || [];
+    incomeData?.incomes?.map((i) => moment(i.date).format("MM/DD/YYYY")) || [];
   const incomeAmounts =
-    incomeData?.incomes.map((income) => income.amount) || [];
+    incomeData?.incomes?.map((i) => i.amount) || [];
   const expenseAmounts =
-    expenseData?.expenses.map((expense) => expense.amount) || [];
+    expenseData?.expenses?.map((e) => e.amount) || [];
 
   let data = [];
-
   if (incomeAmounts.length === 0 || expenseAmounts.length === 0) {
     data = [
       {
@@ -81,10 +58,6 @@ const DashboardPage = () => {
       expense: expenseAmounts[index] || 0,
     }));
   }
-
-  useEffect(() => {
-    fetchData();
-  }, [incomeData, expenseData]);
 
   return (
     <section className="w-full h-full md:h-[90vh] px-3 md:px-6">
@@ -129,7 +102,9 @@ const DashboardPage = () => {
         </div>
         <div className="px-6 py-4 border-2 w-full sm:w-[30%] border-secondary rounded-lg inline-flex justify-between items-center">
           <div>
-            <h4 className="font-outfit text-base md:text-lg">Total Expenses</h4>
+            <h4 className="font-outfit text-base md:text-lg">
+              Total Expenses
+            </h4>
             <h4 className="text-2xl md:text-3xl text-red-400 mt-1">
               $
               <NumericFormat
@@ -162,7 +137,7 @@ const DashboardPage = () => {
             ) : (
               recentHistory.map((transaction) => (
                 <li
-                  key={transaction.id}
+                  key={transaction._id}
                   className="border-2 border-secondary rounded-lg px-3 py-4 flex justify-between items-center"
                 >
                   <div className="flex gap-x-4">

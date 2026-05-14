@@ -10,14 +10,25 @@ import {
   validatePaginationParams,
 } from "../utils/validations.js";
 
+// Helper function to calculate round-off and savings
+const calculateRoundOff = (amount) => {
+  const roundOff = Math.ceil(amount / 10) * 10;
+  const savings = roundOff - amount;
+  return { roundOff, savings };
+};
+
 // Controller function to add new expense
 export const addExpense = asyncHandler(async (req, res) => {
   const { title, amount, category, description, date } = req.body;
+
+  const { roundOff, savings } = calculateRoundOff(amount);
 
   const newExpense = new Expense({
     user: req.user._id,
     title,
     amount,
+    roundOff,
+    savings,
     category,
     description,
     date,
@@ -57,37 +68,30 @@ export const updateExpense = asyncHandler(async (req, res) => {
 
   if (title) {
     const error = validateTitleLength(title);
-    if (error) {
-      return res.status(400).json({ error: error });
-    }
+    if (error) return res.status(400).json({ error });
     expense.title = title;
   }
   if (amount) {
     const error = validateAmount(amount);
-    if (error) {
-      return res.status(400).json({ error: error });
-    }
+    if (error) return res.status(400).json({ error });
     expense.amount = amount;
+    const { roundOff, savings } = calculateRoundOff(amount);
+    expense.roundOff = roundOff;
+    expense.savings = savings;
   }
   if (description) {
     const error = validateDescriptionLength(description);
-    if (error) {
-      return res.status(400).json({ error: error });
-    }
+    if (error) return res.status(400).json({ error });
     expense.description = description;
   }
   if (date) {
     const error = validateDate(date);
-    if (error) {
-      return res.status(400).json({ error: error });
-    }
+    if (error) return res.status(400).json({ error });
     expense.date = date;
   }
   if (category) {
     const error = validateExpenseCategory(category);
-    if (error) {
-      return res.status(400).json({ error: error });
-    }
+    if (error) return res.status(400).json({ error });
     expense.category = category;
   }
 
@@ -138,14 +142,18 @@ export const getExpenses = asyncHandler(async (req, res) => {
   const totalExpenses = await Expense.find({ user: req.user._id });
 
   const totalExpense = totalExpenses.reduce(
-    (acc, expense) => acc + expense.amount,
-    0
+    (acc, expense) => acc + expense.amount, 0
+  );
+
+  const totalSavings = totalExpenses.reduce(
+    (acc, expense) => acc + (expense.savings || 0), 0
   );
 
   return res.status(200).json({
     message: "All expenses retrieved successfully!",
     expenses,
     totalExpense,
+    totalSavings,
     pagination: {
       currentPage: page,
       totalPages,
@@ -164,13 +172,17 @@ export const getAllExpenses = asyncHandler(async (req, res) => {
   }
 
   const totalExpense = expenses.reduce(
-    (acc, expense) => acc + expense.amount,
-    0
+    (acc, expense) => acc + expense.amount, 0
+  );
+
+  const totalSavings = expenses.reduce(
+    (acc, expense) => acc + (expense.savings || 0), 0
   );
 
   return res.status(200).json({
     message: "All expenses retrieved successfully!",
     expenses,
     totalExpense,
+    totalSavings,
   });
 });
